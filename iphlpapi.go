@@ -49,6 +49,7 @@ var (
 	getIpAddrTable                          uintptr
 	getIpErrorString                        uintptr
 	getIpForwardTable                       uintptr
+	getIpInterfaceEntry                     uintptr
 	getIpNetTable                           uintptr
 	getIpStatistics                         uintptr
 	getIpStatisticsEx                       uintptr
@@ -81,6 +82,7 @@ var (
 	icmpParseReplies                        uintptr
 	icmpSendEcho                            uintptr
 	icmpSendEcho2                           uintptr
+	initializeIpInterfaceEntry              uintptr
 	ipReleaseAddress                        uintptr
 	ipRenewAddress                          uintptr
 	lookupPersistentTcpPortReservation      uintptr
@@ -166,6 +168,7 @@ func init() {
 	getIpAddrTable = doGetProcAddress(libiphlpapi, "GetIpAddrTable")
 	getIpErrorString = doGetProcAddress(libiphlpapi, "GetIpErrorString")
 	getIpForwardTable = doGetProcAddress(libiphlpapi, "GetIpForwardTable")
+	getIpInterfaceEntry = doGetProcAddress(libiphlpapi, "GetIpInterfaceEntry")
 	getIpNetTable = doGetProcAddress(libiphlpapi, "GetIpNetTable")
 	getIpStatistics = doGetProcAddress(libiphlpapi, "GetIpStatistics")
 	getIpStatisticsEx = doGetProcAddress(libiphlpapi, "GetIpStatisticsEx")
@@ -198,6 +201,7 @@ func init() {
 	icmpParseReplies = doGetProcAddress(libiphlpapi, "IcmpParseReplies")
 	icmpSendEcho = doGetProcAddress(libiphlpapi, "IcmpSendEcho")
 	icmpSendEcho2 = doGetProcAddress(libiphlpapi, "IcmpSendEcho2")
+	initializeIpInterfaceEntry = doGetProcAddress(libiphlpapi, "InitializeIpInterfaceEntry")
 	ipReleaseAddress = doGetProcAddress(libiphlpapi, "IpReleaseAddress")
 	ipRenewAddress = doGetProcAddress(libiphlpapi, "IpRenewAddress")
 	lookupPersistentTcpPortReservation = doGetProcAddress(libiphlpapi, "LookupPersistentTcpPortReservation")
@@ -528,6 +532,14 @@ func GetIpForwardTable(pIpForwardTable PMIB_IPFORWARDTABLE, pdwSize *uint32, bOr
 	return DWORD(ret1)
 }
 
+func GetIpInterfaceEntry(Row PMIB_IPINTERFACE_ROW) DWORD {
+	ret1 := syscall3(getIpInterfaceEntry, 1,
+		uintptr(unsafe.Pointer(Row)),
+		0,
+		0)
+	return DWORD(ret1)
+}
+
 func GetIpNetTable(ipNetTable PMIB_IPNETTABLE, sizePointer *uint32, order bool) ULONG {
 	ret1 := syscall3(getIpNetTable, 3,
 		uintptr(unsafe.Pointer(ipNetTable)),
@@ -841,6 +853,13 @@ func IcmpSendEcho2(icmpHandle HANDLE, event HANDLE, apcRoutine PIO_APC_ROUTINE, 
 		uintptr(timeout),
 		0)
 	return DWORD(ret1)
+}
+
+func InitializeIpInterfaceEntry(Row PMIB_IPINTERFACE_ROW) {
+	syscall.Syscall(initializeIpInterfaceEntry, 1,
+		uintptr(unsafe.Pointer(Row)),
+		0,
+		0)
 }
 
 func IpReleaseAddress(adapterInfo PIP_ADAPTER_INDEX_MAP) DWORD {

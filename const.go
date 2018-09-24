@@ -26,6 +26,26 @@ const (
 	CCHILDREN_SCROLLBAR = 5
 )
 
+type NL_ROUTER_DISCOVERY_BEHAVIOR int32
+
+const (
+	RouterDiscoveryDisabled  = 0
+	RouterDiscoveryEnabled   = 1
+	RouterDiscoveryDhcp      = 2
+	RouterDiscoveryUnchanged = -1
+)
+
+type NL_LINK_LOCAL_ADDRESS_BEHAVIOR int32
+
+const (
+	LinkLocalAlwaysOff = 0
+	LinkLocalDelayed   = 1
+	LinkLocalAlwaysOn  = 2
+	LinkLocalUnchanged = -1
+)
+
+type NL_INTERFACE_OFFLOAD_ROD BOOLEAN
+
 type SE_OBJECT_TYPE int32
 
 const (
@@ -435,6 +455,8 @@ const (
 const IMEMENUITEM_STRING_SIZE = 80
 
 const STYLE_DESCRIPTION_SIZE = 32
+
+const ScopeLevelCount = 16
 
 const MAX_PROTOCOL_CHAIN = 7
 
