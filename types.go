@@ -604,6 +604,7 @@ func init() {
 	types["MIB_IPFORWARDTABLE"] = reflect.TypeOf((*MIB_IPFORWARDTABLE)(nil)).Elem()
 	types["MIB_IPFORWARD_PROTO"] = reflect.TypeOf((*MIB_IPFORWARD_PROTO)(nil)).Elem()
 	types["MIB_IPFORWARD_TYPE"] = reflect.TypeOf((*MIB_IPFORWARD_TYPE)(nil)).Elem()
+	types["MIB_IPINTERFACE_ROW"] = reflect.TypeOf((*MIB_IPINTERFACE_ROW)(nil)).Elem()
 	types["MIB_IPNETROW"] = reflect.TypeOf((*MIB_IPNETROW)(nil)).Elem()
 	types["MIB_IPNETROW_LH"] = reflect.TypeOf((*MIB_IPNETROW_LH)(nil)).Elem()
 	types["MIB_IPNETTABLE"] = reflect.TypeOf((*MIB_IPNETTABLE)(nil)).Elem()
@@ -790,6 +791,7 @@ func init() {
 	types["PMIB_IPADDRTABLE"] = reflect.TypeOf((*PMIB_IPADDRTABLE)(nil)).Elem()
 	types["PMIB_IPFORWARDROW"] = reflect.TypeOf((*PMIB_IPFORWARDROW)(nil)).Elem()
 	types["PMIB_IPFORWARDTABLE"] = reflect.TypeOf((*PMIB_IPFORWARDTABLE)(nil)).Elem()
+	types["PMIB_IPINTERFACE_ROW"] = reflect.TypeOf((*PMIB_IPINTERFACE_ROW)(nil)).Elem()
 	types["PMIB_IPNETROW"] = reflect.TypeOf((*PMIB_IPNETROW)(nil)).Elem()
 	types["PMIB_IPNETTABLE"] = reflect.TypeOf((*PMIB_IPNETTABLE)(nil)).Elem()
 	types["PMIB_IPSTATS"] = reflect.TypeOf((*PMIB_IPSTATS)(nil)).Elem()
@@ -3516,6 +3518,44 @@ type MIB_IPFORWARDTABLE struct {
 	Table        [ANY_SIZE]MIB_IPFORWARDROW
 }
 type MIB_IPFORWARD_PROTO NL_ROUTE_PROTOCOL
+type MIB_IPINTERFACE_ROW struct {
+	Family                                ADDRESS_FAMILY
+	padding                               [pad0for64_4for32]byte
+	InterfaceLuid                         NET_LUID
+	InterfaceIndex                        NET_IFINDEX
+	MaxReassemblySize                     ULONG
+	InterfaceIdentifier                   ULONG64
+	MinRouterAdvertisementInterval        ULONG
+	MaxRouterAdvertisementInterval        ULONG
+	AdvertisingEnabled                    BOOLEAN
+	ForwardingEnabled                     BOOLEAN
+	WeakHostSend                          BOOLEAN
+	WeakHostReceive                       BOOLEAN
+	UseAutomaticMetric                    BOOLEAN
+	UseNeighborUnreachabilityDetection    BOOLEAN
+	ManagedAddressConfigurationSupported  BOOLEAN
+	OtherStatefulConfigurationSupported   BOOLEAN
+	AdvertiseDefaultRoute                 BOOLEAN
+	RouterDiscoveryBehavior               NL_ROUTER_DISCOVERY_BEHAVIOR
+	DadTransmits                          ULONG
+	BaseReachableTime                     ULONG
+	RetransmitTime                        ULONG
+	PathMtuDiscoveryTimeout               ULONG
+	LinkLocalAddressBehavior              NL_LINK_LOCAL_ADDRESS_BEHAVIOR
+	LinkLocalAddressTimeout               ULONG
+	ZoneIndices                           [ScopeLevelCount]ULONG
+	SitePrefixLength                      ULONG
+	Metric                                ULONG
+	NlMtu                                 ULONG
+	Connected                             BOOLEAN
+	SupportsWakeUpPatterns                BOOLEAN
+	SupportsNeighborDiscovery             BOOLEAN
+	SupportsRouterDiscovery               BOOLEAN
+	ReachableTime                         ULONG
+	TransmitOffload                       NL_INTERFACE_OFFLOAD_ROD
+	ReceiveOffload                        NL_INTERFACE_OFFLOAD_ROD
+	DisableDefaultRoutes                  BOOLEAN
+}
 type MIB_IPNETROW MIB_IPNETROW_LH
 type MIB_IPNETROW_LH struct {
 	DwIndex       IF_INDEX
@@ -4659,6 +4699,7 @@ type PMIB_IFTABLE *MIB_IFTABLE
 type PMIB_IPADDRTABLE *MIB_IPADDRTABLE
 type PMIB_IPFORWARDROW *MIB_IPFORWARDROW
 type PMIB_IPFORWARDTABLE *MIB_IPFORWARDTABLE
+type PMIB_IPINTERFACE_ROW *MIB_IPINTERFACE_ROW
 type PMIB_IPNETROW *MIB_IPNETROW_LH
 type PMIB_IPNETTABLE *MIB_IPNETTABLE
 type PMIB_IPSTATS *MIB_IPSTATS_LH
