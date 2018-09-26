@@ -96,6 +96,7 @@ var (
 	sendARP                                 uintptr
 	setIfEntry                              uintptr
 	setIpForwardEntry                       uintptr
+	setIpInterfaceEntry                     uintptr
 	setIpNetEntry                           uintptr
 	setIpStatistics                         uintptr
 	setIpStatisticsEx                       uintptr
@@ -215,6 +216,7 @@ func init() {
 	sendARP = doGetProcAddress(libiphlpapi, "SendARP")
 	setIfEntry = doGetProcAddress(libiphlpapi, "SetIfEntry")
 	setIpForwardEntry = doGetProcAddress(libiphlpapi, "SetIpForwardEntry")
+	setIpInterfaceEntry = doGetProcAddress(libiphlpapi, "SetIpInterfaceEntry")
 	setIpNetEntry = doGetProcAddress(libiphlpapi, "SetIpNetEntry")
 	setIpStatistics = doGetProcAddress(libiphlpapi, "SetIpStatistics")
 	setIpStatisticsEx = doGetProcAddress(libiphlpapi, "SetIpStatisticsEx")
@@ -970,6 +972,14 @@ func SetIfEntry(pIfRow PMIB_IFROW) DWORD {
 func SetIpForwardEntry(pRoute PMIB_IPFORWARDROW) DWORD {
 	ret1 := syscall3(setIpForwardEntry, 1,
 		uintptr(unsafe.Pointer(pRoute)),
+		0,
+		0)
+	return DWORD(ret1)
+}
+
+func SetIpInterfaceEntry(Row PMIB_IPINTERFACE_ROW) DWORD {
+	ret1 := syscall3(setIpInterfaceEntry, 1,
+		uintptr(unsafe.Pointer(Row)),
 		0,
 		0)
 	return DWORD(ret1)

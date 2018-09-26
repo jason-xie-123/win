@@ -3520,7 +3520,7 @@ type MIB_IPFORWARDTABLE struct {
 type MIB_IPFORWARD_PROTO NL_ROUTE_PROTOCOL
 type MIB_IPINTERFACE_ROW struct {
 	Family                                ADDRESS_FAMILY
-	padding                               [pad4for64_0for32]byte
+	padding                               [pad0for64_4for32]byte
 	InterfaceLuid                         NET_LUID
 	InterfaceIndex                        NET_IFINDEX
 	MaxReassemblySize                     ULONG
