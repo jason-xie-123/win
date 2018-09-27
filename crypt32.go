@@ -119,12 +119,14 @@ var (
 	cryptQueryObject                                   uintptr
 	cryptRegisterDefaultOIDFunction                    uintptr
 	cryptRegisterOIDFunction                           uintptr
+	cryptProtectData                                   uintptr
 	cryptSIPRemoveProvider                             uintptr
 	cryptSIPRetrieveSubjectGuid                        uintptr
 	cryptSIPRetrieveSubjectGuidForCatalogFile          uintptr
 	cryptSetKeyIdentifierProperty                      uintptr
 	cryptSetOIDFunctionValue                           uintptr
 	cryptStringToBinary                                uintptr
+	cryptUnprotectData                                 uintptr
 	cryptUnprotectMemory                               uintptr
 	cryptUnregisterDefaultOIDFunction                  uintptr
 	cryptUnregisterOIDFunction                         uintptr
@@ -253,6 +255,7 @@ func init() {
 	cryptMsgGetAndVerifySigner = doGetProcAddress(libcrypt32, "CryptMsgGetAndVerifySigner")
 	cryptMsgGetParam = doGetProcAddress(libcrypt32, "CryptMsgGetParam")
 	cryptMsgUpdate = doGetProcAddress(libcrypt32, "CryptMsgUpdate")
+	cryptProtectData = doGetProcAddress(libcrypt32, "CryptProtectData")
 	cryptProtectMemory = doGetProcAddress(libcrypt32, "CryptProtectMemory")
 	cryptQueryObject = doGetProcAddress(libcrypt32, "CryptQueryObject")
 	cryptRegisterDefaultOIDFunction = doGetProcAddress(libcrypt32, "CryptRegisterDefaultOIDFunction")
@@ -263,6 +266,7 @@ func init() {
 	cryptSetKeyIdentifierProperty = doGetProcAddress(libcrypt32, "CryptSetKeyIdentifierProperty")
 	cryptSetOIDFunctionValue = doGetProcAddress(libcrypt32, "CryptSetOIDFunctionValue")
 	cryptStringToBinary = doGetProcAddress(libcrypt32, "CryptStringToBinaryW")
+	cryptUnprotectData = doGetProcAddress(libcrypt32, "CryptUnprotectData")
 	cryptUnprotectMemory = doGetProcAddress(libcrypt32, "CryptUnprotectMemory")
 	cryptUnregisterDefaultOIDFunction = doGetProcAddress(libcrypt32, "CryptUnregisterDefaultOIDFunction")
 	cryptUnregisterOIDFunction = doGetProcAddress(libcrypt32, "CryptUnregisterOIDFunction")
@@ -1478,6 +1482,21 @@ func CryptMsgUpdate(hCryptMsg HCRYPTMSG, pbData /*const*/ *byte, cbData DWORD, f
 // TODO: Unknown type(s): CRYPTPROTECT_PROMPTSTRUCT *
 // func CryptProtectData(pDataIn *DATA_BLOB, szDataDescr string, pOptionalEntropy *DATA_BLOB, pvReserved uintptr, pPromptStruct CRYPTPROTECT_PROMPTSTRUCT *, dwFlags DWORD, pDataOut *DATA_BLOB) bool
 
+func CryptProtectData(pDataIn PCRYPT_DATA_BLOB, szDataDescr LPCWSTR, pOptionalEntropy PCRYPT_DATA_BLOB, pvReserved PVOID, pPromptStruct PCRYPTPROTECT_PROMPTSTRUCT, dwFlags DWORD, pDataOut PCRYPT_DATA_BLOB) bool {
+	ret1 := syscall9(cryptProtectData, 7,
+		uintptr(unsafe.Pointer(pDataIn)),
+		uintptr(unsafe.Pointer(szDataDescr)),
+		uintptr(unsafe.Pointer(pOptionalEntropy)),
+		uintptr(unsafe.Pointer(pvReserved)),
+		uintptr(unsafe.Pointer(pPromptStruct)),
+		uintptr(dwFlags),
+		uintptr(unsafe.Pointer(pDataOut)),
+		0,
+		0)
+
+	return ret1 != 0
+}
+
 func CryptProtectMemory(pDataIn LPVOID, cbDataIn DWORD, dwFlags DWORD) bool {
 	ret1 := syscall3(cryptProtectMemory, 3,
 		uintptr(unsafe.Pointer(pDataIn)),
@@ -1642,6 +1661,20 @@ func CryptStringToBinary(pszString string, cchString DWORD, dwFlags DWORD, pbBin
 
 // TODO: Unknown type(s): CRYPTPROTECT_PROMPTSTRUCT *
 // func CryptUnprotectData(pDataIn *DATA_BLOB, ppszDataDescr *LPWSTR, pOptionalEntropy *DATA_BLOB, pvReserved uintptr, pPromptStruct CRYPTPROTECT_PROMPTSTRUCT *, dwFlags DWORD, pDataOut *DATA_BLOB) bool
+func CryptUnprotectData(pDataIn PCRYPT_DATA_BLOB, szDataDescr LPCWSTR, pOptionalEntropy PCRYPT_DATA_BLOB, pvReserved PVOID, pPromptStruct PCRYPTPROTECT_PROMPTSTRUCT, dwFlags DWORD, pDataOut PCRYPT_DATA_BLOB) bool {
+	ret1 := syscall9(cryptUnprotectData, 7,
+		uintptr(unsafe.Pointer(pDataIn)),
+		uintptr(unsafe.Pointer(szDataDescr)),
+		uintptr(unsafe.Pointer(pOptionalEntropy)),
+		uintptr(unsafe.Pointer(pvReserved)),
+		uintptr(unsafe.Pointer(pPromptStruct)),
+		uintptr(dwFlags),
+		uintptr(unsafe.Pointer(pDataOut)),
+		0,
+		0)
+
+	return ret1 != 0
+}
 
 func CryptUnprotectMemory(pDataIn LPVOID, cbDataIn DWORD, dwFlags DWORD) bool {
 	ret1 := syscall3(cryptUnprotectMemory, 3,
