@@ -2681,12 +2681,23 @@ func FindWindowEx(hWndParent HWND, hWndChildAfter HWND, lpszClass string, lpszWi
 }
 
 func FindWindow(lpClassName string, lpWindowName string) HWND {
-	lpClassNameStr := unicode16FromString(lpClassName)
+	var ret1 uintptr
+
 	lpWindowNameStr := unicode16FromString(lpWindowName)
-	ret1 := syscall3(findWindow, 2,
-		uintptr(unsafe.Pointer(&lpClassNameStr[0])),
-		uintptr(unsafe.Pointer(&lpWindowNameStr[0])),
-		0)
+
+	if len(lpClassName) == 0 {
+		ret1 = syscall3(findWindow, 2,
+			0,
+			uintptr(unsafe.Pointer(&lpWindowNameStr[0])),
+			0)
+	} else {
+		lpClassNameStr := unicode16FromString(lpClassName)
+		ret1 = syscall3(findWindow, 2,
+			uintptr(unsafe.Pointer(&lpClassNameStr[0])),
+			uintptr(unsafe.Pointer(&lpWindowNameStr[0])),
+			0)
+	}
+
 	return HWND(ret1)
 }
 
